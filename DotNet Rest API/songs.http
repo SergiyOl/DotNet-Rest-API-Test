@@ -1,1 +1,33 @@
-GET http://localhost:7236
+GET http://localhost:5059/songs
+
+###
+
+GET http://localhost:5059/songs/2
+
+###
+
+POST http://localhost:5059/songs
+Content-Type: application/json
+
+{
+  "name": "newSong",
+  "genre": "Pop",
+  "lenght": 169,
+  "listens": 984
+}
+
+###
+
+PUT http://localhost:5059/songs/1
+Content-Type: application/json
+
+{
+  "name": "updatedSong",
+  "genre": "Metal",
+  "lenght": 209,
+  "listens": 2780
+}
+
+###
+
+DELETE http://localhost:5059/songs/2
