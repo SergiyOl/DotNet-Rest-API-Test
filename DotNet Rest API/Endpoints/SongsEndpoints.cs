@@ -30,14 +30,15 @@ namespace DotNet_Rest_API.Endpoints
 
         public static RouteGroupBuilder MapSongsEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("songs");
+            var group = app.MapGroup("songs")
+                           .WithParameterValidation();
 
             // GET /songs
             group.MapGet("/", () => songs);
 
             // GET /songs/(id)
             group.MapGet("/{id}", (int id) =>
-            {
+            { 
                 SongDto? song = songs.Find(song => song.Id == id);
 
                 return song is null ? Results.NotFound() : Results.Ok(song);

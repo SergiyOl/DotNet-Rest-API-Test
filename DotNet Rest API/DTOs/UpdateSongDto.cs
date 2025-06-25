@@ -1,9 +1,11 @@
-﻿namespace DotNet_Rest_API.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DotNet_Rest_API.DTOs
 {
     public record class UpdateSongDto(
-        string Name,
-        string Genre,
-        int Lenght,
+        [Required][StringLength(50)] string Name,
+        [Required][StringLength(20)] string Genre,
+        [Required] int Lenght,
         int Listens
     );
 }
