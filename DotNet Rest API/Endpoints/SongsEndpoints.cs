@@ -28,13 +28,15 @@ namespace DotNet_Rest_API.Endpoints
                 )
         ];
 
-        public static WebApplication MapSongsEndpoints(this WebApplication app)
+        public static RouteGroupBuilder MapSongsEndpoints(this WebApplication app)
         {
+            var group = app.MapGroup("songs");
+
             // GET /songs
-            app.MapGet("songs", () => songs);
+            group.MapGet("/", () => songs);
 
             // GET /songs/(id)
-            app.MapGet("songs/{id}", (int id) =>
+            group.MapGet("/{id}", (int id) =>
             {
                 SongDto? song = songs.Find(song => song.Id == id);
 
@@ -43,7 +45,7 @@ namespace DotNet_Rest_API.Endpoints
             .WithName("GetSong");
 
             // POST /songs
-            app.MapPost("songs", (CreateSongDto newSong) =>
+            group.MapPost("/", (CreateSongDto newSong) =>
             {
                 SongDto song = new(
                     songs.Count,
@@ -58,7 +60,7 @@ namespace DotNet_Rest_API.Endpoints
             });
 
             // PUT /songs/(id)
-            app.MapPut("songs/{id}", (int id, UpdateSongDto updatedSong) =>
+            group.MapPut("/{id}", (int id, UpdateSongDto updatedSong) =>
             //songs.Find(song => song.Id == id)).WithName("GetSong");
             {
                 var index = songs.FindIndex(song => song.Id == id);
@@ -80,14 +82,14 @@ namespace DotNet_Rest_API.Endpoints
             });
 
             // DELETE /songs/(id)
-            app.MapDelete("songs/{id}", (int id) =>
+            group.MapDelete("/{id}", (int id) =>
             {
                 songs.RemoveAll(song => song.Id == id);
 
                 return Results.NoContent();
             });
 
-            return app;
+            return group;
         }
     }
 }
