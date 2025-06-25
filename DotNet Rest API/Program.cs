@@ -10,5 +10,7 @@ builder.Services.AddSqlite<SongsListContext>(connString);
 var app = builder.Build();
 app.MapSongsEndpoints();
 
+app.MigrateDB();
+
 app.MapGet("/", () => "Hello World!");
 app.Run();
