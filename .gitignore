@@ -366,3 +366,4 @@ FodyWeavers.xsd
 
 # Project files
 /DotNet Rest API/Data/Migrations
+/DotNet Rest API/SongsList.db
