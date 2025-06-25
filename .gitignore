@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+
+# Project files
+"DotNet Rest API"/Data/Migrations
+/DotNet Rest API/Data/Migrations
