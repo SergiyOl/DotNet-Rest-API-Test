@@ -1,6 +1,6 @@
 ﻿namespace DotNet_Rest_API.DTOs
 {
-    public record class SongDto(
+    public record class SongSummaryDto(
         int Id, 
         string Name, 
         string Genre, 

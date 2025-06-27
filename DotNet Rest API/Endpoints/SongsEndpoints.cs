@@ -2,12 +2,13 @@
 using DotNet_Rest_API.DTOs;
 using DotNet_Rest_API.Entities;
 using DotNet_Rest_API.Mapping;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Rest_API.Endpoints
 {
     public static class SongsEndpoints
     {
-        private static readonly List<SongDto> songs = [
+        private static readonly List<SongSummaryDto> songs = [
             new (
                 0,
                 "song1",
@@ -37,14 +38,14 @@ namespace DotNet_Rest_API.Endpoints
                            .WithParameterValidation();
 
             // GET /songs
-            group.MapGet("/", () => songs);
+            group.MapGet("/", (SongsListContext dbContext) => dbContext.Songs);
 
             // GET /songs/(id)
-            group.MapGet("/{id}", (int id) =>
-            { 
-                SongDto? song = songs.Find(song => song.Id == id);
+            group.MapGet("/{id}", (int id, SongsListContext dbContext) =>
+            {
+                Song? song = dbContext.Songs.Find(id);
 
-                return song is null ? Results.NotFound() : Results.Ok(song);
+                return song is null ? Results.NotFound() : Results.Ok(song.ToSongDetailsDto());
             })
             .WithName("GetSong");
 
@@ -52,32 +53,25 @@ namespace DotNet_Rest_API.Endpoints
             group.MapPost("/", (CreateSongDto newSong, SongsListContext dbContext) =>
             {
                 Song song = newSong.ToEntity();
-                song.Genre = dbContext.Genres.Find(newSong.GenreId);
 
                 dbContext.Songs.Add(song);
                 dbContext.SaveChanges();
 
-                return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song.ToDto());
+                return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song.ToSongDetailsDto());
             });
 
             // PUT /songs/(id)
-            group.MapPut("/{id}", (int id, UpdateSongDto updatedSong) =>
-            //songs.Find(song => song.Id == id)).WithName("GetSong");
+            group.MapPut("/{id}", (int id, UpdateSongDto updatedSong, SongsListContext dbContext) =>
             {
-                var index = songs.FindIndex(song => song.Id == id);
+                var existingSong = dbContext.Songs.Find(id);
 
-                if (index == -1)
+                if (existingSong is null)
                 {
                     return Results.NotFound();
                 }
 
-                songs[index] = new SongDto(
-                    id,
-                    updatedSong.Name,
-                    updatedSong.Genre,
-                    updatedSong.Lenght,
-                    updatedSong.Listens
-                );
+                dbContext.Entry(existingSong).CurrentValues.SetValues(updatedSong.ToEntity(id));
+                dbContext.SaveChanges();
 
                 return Results.NoContent();
             });
