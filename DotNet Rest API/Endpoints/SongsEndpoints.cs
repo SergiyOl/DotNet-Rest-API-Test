@@ -8,30 +8,6 @@ namespace DotNet_Rest_API.Endpoints
 {
     public static class SongsEndpoints
     {
-        private static readonly List<SongSummaryDto> songs = [
-            new (
-                0,
-                "song1",
-                "Rock",
-                186,
-                1308
-                ),
-            new (
-                1,
-                "song2",
-                "Indie",
-                168,
-                2231
-                ),
-            new (
-                2,
-                "song3",
-                "Pop",
-                191,
-                6890
-                )
-        ];
-
         public static RouteGroupBuilder MapSongsEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("songs")
