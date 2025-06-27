@@ -1,4 +1,6 @@
-﻿using DotNet_Rest_API.DTOs;
+﻿using DotNet_Rest_API.Data;
+using DotNet_Rest_API.DTOs;
+using DotNet_Rest_API.Entities;
 
 namespace DotNet_Rest_API.Endpoints
 {
@@ -46,18 +48,29 @@ namespace DotNet_Rest_API.Endpoints
             .WithName("GetSong");
 
             // POST /songs
-            group.MapPost("/", (CreateSongDto newSong) =>
+            group.MapPost("/", (CreateSongDto newSong, SongsListContext dbContext) =>
             {
-                SongDto song = new(
-                    songs.Count,
-                    newSong.Name,
-                    newSong.Genre,
-                    newSong.Lenght,
-                    newSong.Listens);
+                Song song = new()
+                {
+                    Name = newSong.Name,
+                    Genre = dbContext.Genres.Find(newSong.GenreId),
+                    GenreId = newSong.GenreId,
+                    Lenght = newSong.Lenght,
+                    Listens = newSong.Listens
+                };
 
-                songs.Add(song);
+                dbContext.Songs.Add(song);
+                dbContext.SaveChanges();
 
-                return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song);
+                SongDto songDto = new(
+                    song.Id,
+                    song.Name,
+                    song.Genre!.Name,
+                    song.Lenght,
+                    song.Listens
+                );
+
+                return Results.CreatedAtRoute("GetSong", new { id = song.Id }, songDto);
             });
 
             // PUT /songs/(id)
