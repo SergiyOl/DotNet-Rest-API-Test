@@ -38,7 +38,11 @@ namespace DotNet_Rest_API.Endpoints
                            .WithParameterValidation();
 
             // GET /songs
-            group.MapGet("/", (SongsListContext dbContext) => dbContext.Songs);
+            group.MapGet("/", (SongsListContext dbContext) => 
+                dbContext.Songs
+                   .Include(song => song.Genre)
+                   .Select(song => song.ToSongSummaryDto())
+                   .AsNoTracking());
 
             // GET /songs/(id)
             group.MapGet("/{id}", (int id, SongsListContext dbContext) =>
