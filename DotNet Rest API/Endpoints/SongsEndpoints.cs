@@ -81,9 +81,11 @@ namespace DotNet_Rest_API.Endpoints
             });
 
             // DELETE /songs/(id)
-            group.MapDelete("/{id}", (int id) =>
+            group.MapDelete("/{id}", (int id, SongsListContext dbContext) =>
             {
-                songs.RemoveAll(song => song.Id == id);
+                dbContext.Songs
+                    .Where(song => song.Id == id)
+                    .ExecuteDelete();
 
                 return Results.NoContent();
             });
