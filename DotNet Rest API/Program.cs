@@ -9,6 +9,7 @@ builder.Services.AddSqlite<SongsListContext>(connString);
 
 var app = builder.Build();
 app.MapSongsEndpoints();
+app.MapGenresEndpoints();
 
 await app.MigrateDBAsync();
 
