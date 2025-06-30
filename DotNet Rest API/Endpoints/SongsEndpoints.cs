@@ -14,36 +14,37 @@ namespace DotNet_Rest_API.Endpoints
                            .WithParameterValidation();
 
             // GET /songs
-            group.MapGet("/", (SongsListContext dbContext) => 
-                dbContext.Songs
+            group.MapGet("/", async (SongsListContext dbContext) => 
+                await dbContext.Songs
                    .Include(song => song.Genre)
                    .Select(song => song.ToSongSummaryDto())
-                   .AsNoTracking());
+                   .AsNoTracking()
+                   .ToListAsync());
 
             // GET /songs/(id)
-            group.MapGet("/{id}", (int id, SongsListContext dbContext) =>
+            group.MapGet("/{id}", async (int id, SongsListContext dbContext) =>
             {
-                Song? song = dbContext.Songs.Find(id);
+                Song? song = await dbContext.Songs.FindAsync(id);
 
                 return song is null ? Results.NotFound() : Results.Ok(song.ToSongDetailsDto());
             })
             .WithName("GetSong");
 
             // POST /songs
-            group.MapPost("/", (CreateSongDto newSong, SongsListContext dbContext) =>
+            group.MapPost("/", async (CreateSongDto newSong, SongsListContext dbContext) =>
             {
                 Song song = newSong.ToEntity();
 
                 dbContext.Songs.Add(song);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
 
                 return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song.ToSongDetailsDto());
             });
 
             // PUT /songs/(id)
-            group.MapPut("/{id}", (int id, UpdateSongDto updatedSong, SongsListContext dbContext) =>
+            group.MapPut("/{id}", async (int id, UpdateSongDto updatedSong, SongsListContext dbContext) =>
             {
-                var existingSong = dbContext.Songs.Find(id);
+                var existingSong = await dbContext.Songs.FindAsync(id);
 
                 if (existingSong is null)
                 {
@@ -51,17 +52,17 @@ namespace DotNet_Rest_API.Endpoints
                 }
 
                 dbContext.Entry(existingSong).CurrentValues.SetValues(updatedSong.ToEntity(id));
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();
             });
 
             // DELETE /songs/(id)
-            group.MapDelete("/{id}", (int id, SongsListContext dbContext) =>
+            group.MapDelete("/{id}", async (int id, SongsListContext dbContext) =>
             {
-                dbContext.Songs
+                await dbContext.Songs
                     .Where(song => song.Id == id)
-                    .ExecuteDelete();
+                    .ExecuteDeleteAsync();
 
                 return Results.NoContent();
             });
