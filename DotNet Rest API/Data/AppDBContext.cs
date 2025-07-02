@@ -1,10 +1,12 @@
 ﻿using DotNet_Rest_API.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.CodeDom.Compiler;
 
 namespace DotNet_Rest_API.Data
 {
-    public class SongsListContext(DbContextOptions<SongsListContext> options) : DbContext(options)
+    public class AppDBContext(DbContextOptions<AppDBContext> options) : IdentityDbContext(options)
     {
         public DbSet<Song> Songs => Set<Song>();
         public DbSet<Genre> Genres => Set<Genre>();
@@ -18,6 +20,7 @@ namespace DotNet_Rest_API.Data
                 new { Id = 4, Name = "Indie" },
                 new { Id = 5, Name = "Rap" }
             );
-        }
+        } 
     }
 }
+

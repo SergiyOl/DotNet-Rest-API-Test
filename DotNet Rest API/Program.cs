@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //SQLite
 var connString = builder.Configuration.GetConnectionString("SongsList");
-builder.Services.AddSqlite<SongsListContext>(connString);
+builder.Services.AddSqlite<AppDBContext>(connString);
 
 var app = builder.Build();
 app.MapSongsEndpoints();

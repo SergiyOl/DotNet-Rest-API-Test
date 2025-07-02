@@ -14,7 +14,7 @@ namespace DotNet_Rest_API.Endpoints
                            .WithParameterValidation();
 
             // GET /songs
-            group.MapGet("/", async (SongsListContext dbContext) => 
+            group.MapGet("/", async (AppDBContext dbContext) => 
                 await dbContext.Songs
                    .Include(song => song.Genre)
                    .Select(song => song.ToSongSummaryDto())
@@ -22,7 +22,7 @@ namespace DotNet_Rest_API.Endpoints
                    .ToListAsync());
 
             // GET /songs/(id)
-            group.MapGet("/{id}", async (int id, SongsListContext dbContext) =>
+            group.MapGet("/{id}", async (int id, AppDBContext dbContext) =>
             {
                 Song? song = await dbContext.Songs.FindAsync(id);
 
@@ -31,7 +31,7 @@ namespace DotNet_Rest_API.Endpoints
             .WithName("GetSong");
 
             // POST /songs
-            group.MapPost("/", async (CreateSongDto newSong, SongsListContext dbContext) =>
+            group.MapPost("/", async (CreateSongDto newSong, AppDBContext dbContext) =>
             {
                 Song song = newSong.ToEntity();
 
@@ -42,7 +42,7 @@ namespace DotNet_Rest_API.Endpoints
             });
 
             // PUT /songs/(id)
-            group.MapPut("/{id}", async (int id, UpdateSongDto updatedSong, SongsListContext dbContext) =>
+            group.MapPut("/{id}", async (int id, UpdateSongDto updatedSong, AppDBContext dbContext) =>
             {
                 var existingSong = await dbContext.Songs.FindAsync(id);
 
@@ -58,7 +58,7 @@ namespace DotNet_Rest_API.Endpoints
             });
 
             // DELETE /songs/(id)
-            group.MapDelete("/{id}", async (int id, SongsListContext dbContext) =>
+            group.MapDelete("/{id}", async (int id, AppDBContext dbContext) =>
             {
                 await dbContext.Songs
                     .Where(song => song.Id == id)

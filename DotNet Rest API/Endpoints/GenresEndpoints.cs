@@ -12,7 +12,7 @@ namespace DotNet_Rest_API.Endpoints
                            .WithParameterValidation();
 
             // GET /genres
-            group.MapGet("/", async (SongsListContext dbContext) =>
+            group.MapGet("/", async (AppDBContext dbContext) =>
                 await dbContext.Genres
                    .Select(genre => genre.ToDto())
                    .AsNoTracking()
