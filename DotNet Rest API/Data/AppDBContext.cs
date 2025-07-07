@@ -7,7 +7,7 @@ using System.CodeDom.Compiler;
 
 namespace DotNet_Rest_API.Data
 {
-    public class AppDBContext : IdentityDbContext<IdentityUser>
+    public class AppDBContext : IdentityDbContext<AppUser>
     {
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
