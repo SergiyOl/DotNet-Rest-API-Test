@@ -12,6 +12,9 @@ builder.Services.AddSqlite<AppDBContext>(connString);
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Auth services
+builder.Services.AddAuthorization();
+
 //Identity and Stores
 builder.Services
     .AddIdentityApiEndpoints<AppUser>()
@@ -23,9 +26,11 @@ var app = builder.Build();
 //Endpoints
 app.MapSongsEndpoints();
 app.MapGenresEndpoints();
+app.MapGroup("account").MapIdentityApi<AppUser>();
 //Migration
 await app.MigrateDBAsync();
-
+//Auth
+app.UseAuthorization();
 
 ////App start
 app.MapGet("/", () => "Hello World!");
