@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 //SQLite
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddSqlite<AppDBContext>(connString);
+//Alternative SQLite connection
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -20,24 +21,43 @@ builder.Services.AddAuthorizationBuilder()
 
 //Identity and Stores
 builder.Services
-    .AddIdentityApiEndpoints<AppUser>()
+    .AddIdentityCore<AppUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddRoles<IdentityRole>()
+    .AddSignInManager<SignInManager<AppUser>>()
     .AddEntityFrameworkStores<AppDBContext>();
+builder.Services.AddIdentityApiEndpoints<AppUser>();
+//Old Identity and Stores
+//builder.Services
+//    .AddIdentityApiEndpoints<AppUser>();
+//    .AddEntityFrameworkStores<AppDBContext>();
 
 
 //App build
 var app = builder.Build();
+
+//RoleSeederScope
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await RoleSeeder.SeedRolesAsync(roleManager);
+
+    // var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+}
+
 //Endpoints
 app.MapSongsEndpoints();
 app.MapGenresEndpoints();
-app.MapGroup("account").MapIdentityApi<AppUser>();
-//RoleSeeder
-var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
-await RoleSeeder.SeedRolesAsync(roleManager);
+app.MapGroup("oldaccount").MapIdentityApi<AppUser>(); // To Delete
+app.MapAuthEndpoints();
+
 //Migration
 await app.MigrateDBAsync();
+
 //Auth
 app.UseAuthorization();
 
-////App start
-app.MapGet("/", () => "Hello World!");
+//App start
 app.Run();

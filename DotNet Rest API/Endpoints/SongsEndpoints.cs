@@ -13,6 +13,7 @@ namespace DotNet_Rest_API.Endpoints
         public static RouteGroupBuilder MapSongsEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("songs")
+                           .RequireAuthorization("UserOnly") //Restricting group
                            .WithParameterValidation();
 
             // GET /songs
