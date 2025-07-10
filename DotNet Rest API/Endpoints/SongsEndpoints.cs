@@ -2,10 +2,12 @@
 using DotNet_Rest_API.DTOs;
 using DotNet_Rest_API.Entities;
 using DotNet_Rest_API.Mapping;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Rest_API.Endpoints
 {
+    [Authorize(Policy = "UserOnly")]
     public static class SongsEndpoints
     {
         public static RouteGroupBuilder MapSongsEndpoints(this WebApplication app)
@@ -39,7 +41,8 @@ namespace DotNet_Rest_API.Endpoints
                 await dbContext.SaveChangesAsync();
 
                 return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song.ToSongDetailsDto());
-            }).RequireAuthorization();
+            });
+            //.RequireAuthorization();
 
             // PUT /songs/(id)
             group.MapPut("/{id}", async (int id, UpdateSongDto updatedSong, AppDBContext dbContext) =>
@@ -55,7 +58,8 @@ namespace DotNet_Rest_API.Endpoints
                 await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();
-            }).RequireAuthorization();
+            });
+            //.RequireAuthorization();
 
             // DELETE /songs/(id)
             group.MapDelete("/{id}", async (int id, AppDBContext dbContext) =>
@@ -65,7 +69,8 @@ namespace DotNet_Rest_API.Endpoints
                     .ExecuteDeleteAsync();
 
                 return Results.NoContent();
-            }).RequireAuthorization();
+            });
+            //.RequireAuthorization();
 
             return group;
         }
