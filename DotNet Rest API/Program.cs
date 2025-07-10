@@ -1,6 +1,7 @@
 using DotNet_Rest_API.Data;
 using DotNet_Rest_API.Endpoints;
 using DotNet_Rest_API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -13,7 +14,9 @@ builder.Services.AddSqlite<AppDBContext>(connString);
 //    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Auth services
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("UserOnly", policy => policy.RequireRole("User"))
+    .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 
 //Identity and Stores
 builder.Services
@@ -27,6 +30,9 @@ var app = builder.Build();
 app.MapSongsEndpoints();
 app.MapGenresEndpoints();
 app.MapGroup("account").MapIdentityApi<AppUser>();
+//RoleSeeder
+var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
+await RoleSeeder.SeedRolesAsync(roleManager);
 //Migration
 await app.MigrateDBAsync();
 //Auth
