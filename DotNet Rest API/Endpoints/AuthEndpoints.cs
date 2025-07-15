@@ -1,4 +1,5 @@
 ﻿using DotNet_Rest_API.Data;
+using DotNet_Rest_API.Data.Migrations;
 using DotNet_Rest_API.DTOs;
 using DotNet_Rest_API.Entities;
 using DotNet_Rest_API.JWT;
@@ -22,9 +23,11 @@ namespace DotNet_Rest_API.Endpoints
                 UserManager<AppUser> userManager,
                 RoleManager<IdentityRole> roleManager) =>
             {
+                // Create user
                 var user = new AppUser { UserName = dto.Email, Email = dto.Email };
                 var result = await userManager.CreateAsync(user, dto.Password);
 
+                // Creation failure
                 if (!result.Succeeded)
                 {
                     return Results.BadRequest(result.Errors);
@@ -39,6 +42,7 @@ namespace DotNet_Rest_API.Endpoints
                 // Assign "User" role
                 await userManager.AddToRoleAsync(user, "User");
 
+                // Return
                 return Results.Ok("User registered");
             });
 
@@ -80,6 +84,47 @@ namespace DotNet_Rest_API.Endpoints
                     expiresIn = int.Parse(config["Jwt:AccessTokenLifetimeMinutes"] ??
                         throw new InvalidOperationException("Jwt:AccessTokenLifetimeMinutes is missing in configuration.")) * 60,
                     refreshToken,
+                    refreshTokenExpiresIn = int.Parse(config["Jwt:RefreshTokenLifetimeMinutes"] ??
+                        throw new InvalidOperationException("Jwt:RefreshTokenLifetimeMinutes is missing in configuration.")) * 60
+                });
+            });
+
+            //Refresh
+            group.MapPost("/refresh", async (
+                RefreshDto dto,
+                UserManager<AppUser> userManager,
+                TokenService tokenService,
+                IConfiguration config) =>
+            {
+                // Find user with this refresh token
+                var user = await userManager.Users
+                    .Where(u => u.RefreshToken == dto.RefreshToken)
+                    .FirstOrDefaultAsync();
+                
+                // Check token existance and expiary date
+                if (user is null || user.RefreshTokenExpiry < DateTime.UtcNow)
+                    return Results.Unauthorized();
+                
+                // Get User`s roles
+                var roles = await userManager.GetRolesAsync(user);
+
+                // Generate new tokens
+                var newAccessToken = tokenService.GenerateAccessToken(user, roles);
+                var newRefreshToken = tokenService.GenerateRefreshToken();
+                var newRefreshExpiry = tokenService.GetRefreshTokenExpiry();
+
+                // Update stored refresh token
+                user.RefreshToken = newRefreshToken;
+                user.RefreshTokenExpiry = newRefreshExpiry;
+                await userManager.UpdateAsync(user);
+
+                // Return
+                return Results.Ok(new
+                {
+                    accessToken = newAccessToken,
+                    expiresIn = int.Parse(config["Jwt:AccessTokenLifetimeMinutes"] ??
+                        throw new InvalidOperationException("Jwt:AccessTokenLifetimeMinutes is missing in configuration.")) * 60,
+                    refreshToken = newRefreshToken,
                     refreshTokenExpiresIn = int.Parse(config["Jwt:RefreshTokenLifetimeMinutes"] ??
                         throw new InvalidOperationException("Jwt:RefreshTokenLifetimeMinutes is missing in configuration.")) * 60
                 });
