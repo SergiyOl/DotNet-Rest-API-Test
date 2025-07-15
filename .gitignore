@@ -369,5 +369,4 @@ FodyWeavers.xsd
 /DotNet Rest API/SongsList.db
 /DotNet Rest API/SongsList.db-shm
 /DotNet Rest API/SongsList.db-wal
-/DotNet Rest API/songs.http
-/DotNet Rest API/HttpRequests
+# /DotNet Rest API/HttpRequests

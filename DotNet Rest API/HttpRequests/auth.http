@@ -1,0 +1,28 @@
+### Register a new user
+POST http://localhost:5059/account/register
+Content-Type: application/json
+
+{
+  "email": "email2@example.com",
+  "password": "SuperSecret1!"
+}
+
+### Login and retrieve tokens
+POST http://localhost:5059/account/login
+Content-Type: application/json
+{
+  "email": "email2@example.com",
+  "password": "SuperSecret1!"
+}
+
+### Fetch a new access token
+POST http://localhost:5059/account/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "T4BwcdNFUTOIkD5kOAUPwChbkJXYlHmO2tSKEXN83OjacfPw0UNycAohQ4J9KwAWWoICzD09GS2453YMhK9Seg=="
+}
+
+### Logout
+POST http://localhost:5059/account/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYWIxMmE0ZC0zM2VmLTRiNzAtYWJhOS1jMGIyMmUwYzE3ZjEiLCJlbWFpbCI6ImVtYWlsMkBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJlbWFpbDJAZXhhbXBsZS5jb20iLCJqdGkiOiJiMmEwNmQwMi1lMjAzLTQ0YzYtOWY3Mi1lMzZjYTc2NmYyYmQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNzUyNTc3MTc1fQ.zSskAaDxhSv_37En16KS44Jh5xYHr8RTYTJ_uMrzcyw
