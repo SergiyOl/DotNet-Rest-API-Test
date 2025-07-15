@@ -7,6 +7,7 @@ using DotNet_Rest_API.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DotNet_Rest_API.Endpoints
 {
@@ -128,6 +129,25 @@ namespace DotNet_Rest_API.Endpoints
                     refreshTokenExpiresIn = int.Parse(config["Jwt:RefreshTokenLifetimeMinutes"] ??
                         throw new InvalidOperationException("Jwt:RefreshTokenLifetimeMinutes is missing in configuration.")) * 60
                 });
+            });
+
+            // Logout
+            group.MapPost("/logout", [Authorize(Policy = "UserOnly")] async (
+                ClaimsPrincipal userPrincipal,
+                UserManager<AppUser> userManager) =>
+            {
+                // Find user
+                var user = await userManager.GetUserAsync(userPrincipal);
+                if (user is null)
+                    return Results.Unauthorized();
+
+                // Delete refresh token
+                user.RefreshToken = null;
+                user.RefreshTokenExpiry = null;
+                await userManager.UpdateAsync(user);
+
+                // Return
+                return Results.Ok(new { message = "Logged out successfully" });
             });
 
             return group;
