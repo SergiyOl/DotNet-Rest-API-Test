@@ -43,7 +43,6 @@ namespace DotNet_Rest_API.Endpoints
 
                 return Results.CreatedAtRoute("GetSong", new { id = song.Id }, song.ToSongDetailsDto());
             });
-            //.RequireAuthorization();
 
             // PUT /songs/(id)
             group.MapPut("/{id}", async (int id, UpdateSongDto updatedSong, AppDBContext dbContext) =>
@@ -60,7 +59,6 @@ namespace DotNet_Rest_API.Endpoints
 
                 return Results.NoContent();
             });
-            //.RequireAuthorization();
 
             // DELETE /songs/(id)
             group.MapDelete("/{id}", async (int id, AppDBContext dbContext) =>
@@ -71,7 +69,6 @@ namespace DotNet_Rest_API.Endpoints
 
                 return Results.NoContent();
             });
-            //.RequireAuthorization();
 
             return group;
         }
