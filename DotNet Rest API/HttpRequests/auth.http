@@ -15,6 +15,14 @@ Content-Type: application/json
   "password": "SuperSecret1!"
 }
 
+### Login as admin
+POST http://localhost:5059/account/login
+Content-Type: application/json
+{
+  "email": "admin@example.com",
+  "password": "Admin123!"
+}
+
 ### Fetch a new access token
 POST http://localhost:5059/account/refresh
 Content-Type: application/json
