@@ -1,28 +1,28 @@
+### Get all
 GET http://localhost:5059/songs
 
-###
-
+### Get by Id
 GET http://localhost:5059/songs/3
 
-###
-
+### Search by name
+GET http://localhost:5059/songs/search?request=ll
+Authorization: Bearer 
+### Create song
 POST http://localhost:5059/songs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYWIxMmE0ZC0zM2VmLTRiNzAtYWJhOS1jMGIyMmUwYzE3ZjEiLCJlbWFpbCI6ImVtYWlsMkBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJlbWFpbDJAZXhhbXBsZS5jb20iLCJqdGkiOiI1YjExYmVjOS1jODcyLTRjNjItYWE4NS00OTU1ODllNGIwNDEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNzUyNTc0ODM2fQ.ME-6OkfdTEnXVjw2bE0OZPziM1f9c3bagzaryrGUwpg
+Authorization: Bearer 
 {
-  "name": "newSong",
+  "name": "heLlO",
   "genreId": 5,
   "lenght": 169,
   "listens": 984
 }
 
 
-###
-
+### Update song
 PUT http://localhost:5059/songs/1
 Content-Type: application/json
-Authorization: Bearer CfDJ8L0S_A7U8ahNujImMax5gEgoojmVxO-e3uWBlmVj-H0JASc_2cxBmENwmd5OKRz4P1ECMM7oFENZlOmwtuNQdtyAhcEqS1WcxpR7EE859jj4_2RTBVEiVT_r9UJ1C15xTMEWXik5YUqn2KpeoPaTKGtwkqnNnThnnX0oeiPmwCP_3P-KVhtdKw0x2eoGvoLi74hHVVB7Iz4RGjFNL2nVvYdEFmqcqh6kyRH--YfihffpnFKmWm6a_23Wiuthg5iy9HFAF_8OU5Y4Q1unRqc01GQrmGCahKNy7dPSbYUs1Bb4yrMGGQBP_fGhR1YXUsGjgoAx4gf_Ajt2muFRDdFmCctCyrm4VOO5UJonWsJ31gUyTSxegwR5_ZmMHcW0VNkFNXxJ8YbsR340xcGv_WiT3uniyExP9fvza-F9yS-bRIfXfRNZjpqPjJKKtyssgmzIyqT9ymjdHJ9XrF5EblRV-rOxlRIAUnlF6A-K_EbKOGLmjfe6O273HqOrjNTrZuPLWro0H9I7nBBIcgfkrO7xO24JvLuIJqeyKLzIfSFzeGHJkQVLc--HxpJ5k1EM8RfCpqBzsHHbrM6WIU5xPMdj5xWM8QBMOdYfcGohysmh5odXAAmraPOhrFpN5Swz8eotKFPmwqw3P8HgLZZJdXLhlSfEk_niBClS70HK4IURcTae6PmJhEk34IMhJiJ722ek9Q
-
+Authorization: Bearer 
 {
   "name": "updatedSong",
   "genreId": 1,
@@ -30,7 +30,6 @@ Authorization: Bearer CfDJ8L0S_A7U8ahNujImMax5gEgoojmVxO-e3uWBlmVj-H0JASc_2cxBmE
   "listens": 2780
 }
 
-###
-
+### Delete song
 DELETE http://localhost:5059/songs/2
-Authorization: Bearer CfDJ8L0S_A7U8ahNujImMax5gEgoojmVxO-e3uWBlmVj-H0JASc_2cxBmENwmd5OKRz4P1ECMM7oFENZlOmwtuNQdtyAhcEqS1WcxpR7EE859jj4_2RTBVEiVT_r9UJ1C15xTMEWXik5YUqn2KpeoPaTKGtwkqnNnThnnX0oeiPmwCP_3P-KVhtdKw0x2eoGvoLi74hHVVB7Iz4RGjFNL2nVvYdEFmqcqh6kyRH--YfihffpnFKmWm6a_23Wiuthg5iy9HFAF_8OU5Y4Q1unRqc01GQrmGCahKNy7dPSbYUs1Bb4yrMGGQBP_fGhR1YXUsGjgoAx4gf_Ajt2muFRDdFmCctCyrm4VOO5UJonWsJ31gUyTSxegwR5_ZmMHcW0VNkFNXxJ8YbsR340xcGv_WiT3uniyExP9fvza-F9yS-bRIfXfRNZjpqPjJKKtyssgmzIyqT9ymjdHJ9XrF5EblRV-rOxlRIAUnlF6A-K_EbKOGLmjfe6O273HqOrjNTrZuPLWro0H9I7nBBIcgfkrO7xO24JvLuIJqeyKLzIfSFzeGHJkQVLc--HxpJ5k1EM8RfCpqBzsHHbrM6WIU5xPMdj5xWM8QBMOdYfcGohysmh5odXAAmraPOhrFpN5Swz8eotKFPmwqw3P8HgLZZJdXLhlSfEk_niBClS70HK4IURcTae6PmJhEk34IMhJiJ722ek9Q
+Authorization: Bearer 

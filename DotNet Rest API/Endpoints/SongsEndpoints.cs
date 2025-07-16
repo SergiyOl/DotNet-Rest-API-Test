@@ -33,6 +33,15 @@ namespace DotNet_Rest_API.Endpoints
             })
             .WithName("GetSong");
 
+            // GET /songs/search?request=(request)
+            group.MapGet("/search", async (string request, AppDBContext dbContext) =>
+                await dbContext.Songs
+                   .Where(song => song.Name.ToLower().Contains(request.ToLower()))
+                   .Include(song => song.Genre)
+                   .Select(song => song.ToSongSummaryDto())
+                   .AsNoTracking()
+                   .ToListAsync());
+
             // POST /songs
             group.MapPost("/", async (CreateSongDto newSong, AppDBContext dbContext) =>
             {
