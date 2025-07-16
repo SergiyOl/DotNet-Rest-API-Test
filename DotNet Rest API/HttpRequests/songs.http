@@ -5,19 +5,23 @@ GET http://localhost:5059/songs
 GET http://localhost:5059/songs/3
 
 ### Search by name
-GET http://localhost:5059/songs/search?request=ll
+GET http://localhost:5059/songs/search?request=song
 Authorization: Bearer 
+
+### Search by genre
+GET http://localhost:5059/songs/genre?genreid=2
+Authorization: Bearer 
+
 ### Create song
 POST http://localhost:5059/songs
 Content-Type: application/json
 Authorization: Bearer 
 {
-  "name": "heLlO",
-  "genreId": 5,
+  "name": "newSong",
+  "genreId": 4,
   "lenght": 169,
   "listens": 984
 }
-
 
 ### Update song
 PUT http://localhost:5059/songs/1

@@ -42,6 +42,15 @@ namespace DotNet_Rest_API.Endpoints
                    .AsNoTracking()
                    .ToListAsync());
 
+            // GET /songs/genre?genreid=(id)
+            group.MapGet("/genre", async (int genreid, AppDBContext dbContext) =>
+                await dbContext.Songs
+                   .Where(song => song.GenreId == genreid)
+                   .Include(song => song.Genre)
+                   .Select(song => song.ToSongSummaryDto())
+                   .AsNoTracking()
+                   .ToListAsync());
+
             // POST /songs
             group.MapPost("/", async (CreateSongDto newSong, AppDBContext dbContext) =>
             {

@@ -3,7 +3,7 @@ POST http://localhost:5059/account/register
 Content-Type: application/json
 
 {
-  "email": "email@example.com",
+  "email": "email2@example.com",
   "password": "SuperSecret1!"
 }
 
@@ -11,7 +11,7 @@ Content-Type: application/json
 POST http://localhost:5059/account/login
 Content-Type: application/json
 {
-  "email": "email@example.com",
+  "email": "email2@example.com",
   "password": "SuperSecret1!"
 }
 
